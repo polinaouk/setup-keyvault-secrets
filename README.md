@@ -21,7 +21,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Init secrets from KV as envs
-      uses: ./.github/actions/setup-kv-secrets
+      uses: actions/setup-kv-secrets@v1
       with:
         kv-subscription-name: ${{ secrets.CI_KEY_VAULT_SUBSCRIPTION }}
         kv-name: ${{ secrets.CI_KEY_VAULT_NAME }}
