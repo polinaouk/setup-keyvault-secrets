@@ -2,7 +2,7 @@
 
 With this action you can fetch secrets from [Azure Key Vault](https://docs.microsoft.com/en-us/rest/api/keyvault/about-keys--secrets-and-certificates) instance and consume in your GitHub Action workflows.
 
-Fetched secrets will be set as environment variables and can be consumed in the subsequent actions in the workflow using the [env context](https://docs.github.com/en/actions/learn-github-actions/variables#using-the-env-context-to-access-environment-variable-values) e.g `${{ env.STORAGE_ACCOUNT_NAME }}`. All environment variables values are masked in log.
+Fetched secrets will be set as environment variables and can be consumed in the subsequent actions in the workflow using the [env context](https://docs.github.com/en/actions/learn-github-actions/variables#using-the-env-context-to-access-environment-variable-values) e.g `${{ env.STORAGE_ACCOUNT_NAME }}`. All environment variables values are masked in log. Additionally, secret names are converted to UPPER_CASE format.
 
 # Pre-configuration notes
 
@@ -21,7 +21,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Init secrets from KV as envs
-      uses: actions/setup-kv-secrets@v1
+      uses: actions/setup-keyvault-secrets@v1
       with:
         kv-subscription-name: ${{ secrets.CI_KEY_VAULT_SUBSCRIPTION }}
         kv-name: ${{ secrets.CI_KEY_VAULT_NAME }}
