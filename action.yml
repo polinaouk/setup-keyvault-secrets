@@ -1,0 +1,24 @@
+name: "Setup Key Vault secrets"
+description: "It will load Key Vault secrets as envs. All envs will be converted into the uppercase and underscore format eg CLIENT_ID"
+inputs:
+  kv-name:
+    description: Key Vault name
+    required: true
+  kv-subscription-name:
+    description: Key Vault subscription name where it's located
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup secrets
+      shell: bash
+      run: |
+        secret_names_array=$(az keyvault secret list --subscription ${{ inputs.kv-subscription-name }} --vault-name ${{ inputs.kv-name }} --output tsv --query '[].name')
+
+        for name in $secret_names_array; do
+          value=$(az keyvault secret show --subscription ${{ inputs.kv-subscription-name }} --vault-name ${{ inputs.kv-name }} --name ${name} --query value --output tsv)
+          modified_name=$(echo $name | sed 's/\([a-z]\)\([A-Z]\)/\1_\U\2/g' | tr "-" "_" | tr '[:lower:]' '[:upper:]')
+          echo "Saving '${name}' Key Vault secret as environment variable: ${modified_name}"
+          echo "$modified_name=$value" >>$GITHUB_ENV
+          echo "::add-mask::$value"
+        done
