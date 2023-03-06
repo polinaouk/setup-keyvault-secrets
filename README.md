@@ -1,1 +1,1 @@
-# -setup-keyvault-secrets
+# setup-keyvault-secrets
